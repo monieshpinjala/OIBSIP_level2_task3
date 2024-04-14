@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('https://assets-global.website-files.com/6509fe179d7033a278a05268/652771a2ad43d990a8837c07_Blog-feature-HR-Pillar-p-1600.png');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .todo-container {
+            width: 400px;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+        .todo-container h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .todo-input-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .todo-input-container input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px 0 0 10px;
+            outline: none;
+            font-size: 16px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        .todo-input-container button {
+            padding: 12px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 0 10px 10px 0;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        .todo-input-container button:hover {
+            background-color: #45a049;
+        }
+        .todo-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .todo-item {
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        .todo-item:last-child {
+            margin-bottom: 0;
+        }
+        .todo-item:hover {
+            transform: translateY(-5px);
+        }
+        .todo-item.completed {
+            background-color: #e0e0e0;
+            color: #888;
+            text-decoration: line-through;
+        }
+        .delete-btn {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #e74c3c;
+            outline: none;
+            transition: color 0.3s;
+        }
+        .delete-btn:hover {
+            color: #c0392b;
+        }
+        .completed-tasks {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .completed-tasks h3 {
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .completed-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        @media (max-width: 480px) {
+            .todo-container {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="overlay"></div>
+<div class="todo-container">
+    <h2>Todo List</h2>
+    <div class="todo-input-container">
+        <input type="text" id="todoInput" placeholder="Add new todo">
+        <button onclick="addTodo()">Add</button>
+    </div>
+    <ul class="todo-list" id="todoList"></ul>
+    <div class="completed-tasks">
+        <h3>Completed Tasks</h3>
+        <ul class="completed-list" id="completedList"></ul>
+    </div>
+</div>
+
+<script>
+    function addTodo() {
+        var input = document.getElementById("todoInput").value;
+        if (input.trim() !== "") {
+            var li = document.createElement("li");
+            li.textContent = input;
+            li.classList.add("todo-item");
+            li.onclick = function() {
+                this.classList.toggle("completed");
+                updateCompletedTasks();
+            };
+            var deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "X";
+            deleteBtn.classList.add("delete-btn");
+            deleteBtn.onclick = function(e) {
+                e.stopPropagation();
+                this.parentNode.remove();
+                updateCompletedTasks();
+            };
+            li.appendChild(deleteBtn);
+            document.getElementById("todoList").appendChild(li);
+            document.getElementById("todoInput").value = "";
+        }
+    }
+
+    function updateCompletedTasks() {
+        var completedList = document.getElementById("completedList");
+        completedList.innerHTML = "";
+        var todoItems = document.querySelectorAll(".todo-item");
+        todoItems.forEach(function(item) {
+            if (item.classList.contains("completed")) {
+                var li = document.createElement("li");
+                li.textContent = item.textContent.replace("X", "");
+                completedList.appendChild(li);
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
